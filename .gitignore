@@ -56,6 +56,7 @@
 !/.config/ghostty/
 !/.config/ghostty/**
 !/.config/yazi/
+!/.config/yazi/**
 
 # neovim: allow config, but do NOT track embedded git metadata if present
 !/.config/nvim/
@@ -72,15 +73,28 @@
 !/.config/zsh/README.md
 !/.config/zsh/options
 !/.config/zsh/.p10k.zsh
+!/.config/zsh/docs/
+!/.config/zsh/docs/**
+!/.config/zsh/lib/
 !/.config/zsh/lib/**
+!/.config/zsh/aliases/
 !/.config/zsh/aliases/**
+!/.config/zsh/functions/
 !/.config/zsh/functions/**
+!/.config/zsh/plugins/
 !/.config/zsh/plugins/*.zsh
+# only unignore directories - these contain sensitive info
+!/.config/zsh/plugins/autosuggestions/
+!/.config/zsh/plugins/autosuggestions/README.md
+!/.config/zsh/plugins/zsh-syntax-highlighting/
+!/.config/zsh/plugins/zsh-syntax-highlighting/README.md
+!/.config/zsh/powerlevel10k/
+!/.config/zsh/powerlevel10k/README.md
 
 # python
 !/.config/uv/
-!/.config/ruff/
 !/.config/uv/**
+!/.config/ruff/
 !/.config/ruff/**
 
 # Never track nested git metadata anywhere we allowlist
@@ -88,10 +102,6 @@
 **/.git/**
 
 # zsh: re-ignore known heavy/private areas
-/.config/zsh/docs/**
-/.config/zsh/plugins/autosuggestions/**
-/.config/zsh/plugins/zsh-syntax-highlighting/**
-/.config/zsh/powerlevel10k/**
 /.config/zsh/.claude/**
 # aliases
 /.config/zsh/aliases/network_admin
