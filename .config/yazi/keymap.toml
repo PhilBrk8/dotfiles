@@ -1,0 +1,29 @@
+# keymap.toml
+[mgr] # the main file-list (manager) view
+# highes priority, checks before default mappings - basically overrides defaults
+#prepend_keymap = [
+#    { on = "n", run = "
+#]
+#[[input.prepend_keymap]]
+#on   = "<Esc>"
+#run  = "close"
+#desc = "Cancel input" checks after defaults - save option to not override existing mappings
+#
+[[append_keymap]]
+on   = [ "<C-p>" ]
+run  = "shell -- zsh -c 'add_to_playlist_interactive $@'"
+desc = "Adds previously selected files to a choosable playlist"
+
+[tasks] # the task-manager pane
+
+[spot] # the file-information “spotter” overlay
+
+[pick] # the picker component (e.g. “open with…” menus)
+
+[input] # input dialogs (create/rename/etc.)
+
+[confirm] # confirmation dialogs (delete/overwrite/etc.)
+
+[cmp] # tab-completion popups (e.g. in cd)
+
+[help] # the F1/~ help menu 
