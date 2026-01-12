@@ -1,0 +1,53 @@
+#!/usr/bin/env zsh
+
+# Function to print file content
+print_file() {
+    local file=$1
+    echo "Contents of $file:"
+    cat "$file"
+    echo
+}
+
+# Function to resolve relative paths
+resolve_path() {
+    local relative_path=$1
+    local base_dir=$2
+    echo $(cd "$base_dir" && realpath "$relative_path")
+}
+
+# Check for argument
+if [[ $# -lt 1 ]]; then
+    echo "Usage: $0 <path to script file>"
+    exit 1
+fi
+
+# Path to the provided script file
+script_path=$1
+
+# Directory of the provided script file
+script_dir=$(dirname "$script_path")
+
+# Check if the script file exists
+if [[ -f $script_path ]]; then
+    print_file $script_path
+else
+    echo "File not found at $script_path"
+    exit 1
+fi
+
+# Read through the script file and process lines with `source` or `.`
+grep '^\s*(source|\.)\s+' "$script_path" | while read -r line; do
+    # Extract the file being sourced
+    sourced_file=$(echo $line | sed -E 's/^\s*(source|\.)\s+//')
+
+    # Resolve the full path of the sourced file
+    full_path=$(resolve_path "$sourced_file" "$script_dir")
+
+    # Check if the sourced file exists
+    if [[ -f $full_path ]]; then
+        print_file $full_path
+    else
+        echo "Sourced file not found: $full_path"
+    fi
+done
+

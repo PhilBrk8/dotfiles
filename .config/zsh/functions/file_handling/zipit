@@ -1,0 +1,42 @@
+#!/usr/bin/env zsh
+#
+# zipit: create a recursive, max-compression zip of a project, excluding common junk.
+# Usage:
+#   zipit                 # -> project_context.zip from current dir
+#   zipit out.zip         # -> out.zip from current dir
+#   zipit out.zip path    # -> out.zip from path
+zipit() {
+  emulate -L zsh
+  setopt errexit nounset pipefail
+
+  local out="${1:-project_context.zip}"
+  local src="${2:-.}"
+
+  # Ensure zip exists
+  if ! command -v zip >/dev/null 2>&1; then
+    print -u2 "zipit: 'zip' not found. Install it first."
+    return 127
+  fi
+
+  # Build exclude list as an array of literal patterns (no glob expansion).
+  local -a excludes=(
+    'data/*'
+    '*/__pycache__/*' '__pycache__/*' '*.py[cod]' '*.$py.class'
+    '*/.pytest_cache/*' '.pytest_cache/*'
+    '*/.mypy_cache/*'   '.mypy_cache/*'
+    '*/.ruff_cache/*'   '.ruff_cache/*'
+    '*/.cache/*'        '.cache/*'
+    '*/.tox/*'          '.tox/*'
+    '*/.venv/*'         '.venv/*' 'venv/*'
+    '*/dist/*' 'dist/*' '*/build/*' 'build/*'
+    '*/.eggs/*' '.eggs/*' '*.egg-info/*'
+    '*/.ipynb_checkpoints/*' '.ipynb_checkpoints/*'
+    '.DS_Store' 'Thumbs.db'
+    '*.log' '*.tmp' '*.swp' '*.swo'
+  )
+
+  print "zipit: creating ${out} from ${src}"
+  # -r recursive, -9 max compression
+  zip -r9 -- "${out}" "${src}" -x "${excludes[@]}"
+}
+

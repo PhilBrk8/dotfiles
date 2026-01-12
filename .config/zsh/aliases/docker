@@ -1,0 +1,11 @@
+# Function to ensure Docker daemon is running
+ensure_docker_running() {
+  if ! systemctl is-active --quiet docker; then
+    echo "Docker is not running. Starting it now..."
+    sudo systemctl start docker
+  fi
+}
+
+alias pandock='ensure_docker_running; docker run --rm -v "$(pwd):/data" -u $(id -u):$(id -g) pandoc/latex'
+
+alias pdf="ensure_docker_running; cd ~/docker/stirling-pdf; sudo docker compose up -d && sudo docker compose logs -f"

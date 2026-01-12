@@ -1,0 +1,20 @@
+# set or remove options with: setopt / unsetopt
+# set all options in the .zshrc and only migrate them to the .zshenv if a
+# specific option does not work from within non-interactive shells
+# (when nvim spins up a shell for example)
+
+
+# Productivity - Power user
+setopt NO_BEEP # disable beep sound if an error occurs
+setopt AUTO_CD # switch directories with only their direct/relative path
+
+# Functions
+setopt KSH_AUTOLOAD # load functions on the fly when calling them (all handeled in the 'functions'-directory
+setopt LOCAL_OPTIONS # if fct changes an option, the option is set back after fct ends/breaks by ^C
+
+#only set this if you want to do complex regular expression / patterns 
+# EXTENDED_GLOB # enables ~/#/^ or globbing flags for pattern matching
+
+# correction function - y/n/ a-abort / e-edit line again
+# CORRECT
+

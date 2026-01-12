@@ -1,0 +1,7 @@
+alias createapp='npm create t3-app@latest'
+alias ppush='npx prisma db push' #pushes updated db-schema to the db
+alias pgen='npx prisma db generate' #generates a db from the updated db-schema
+alias ppg='npx prisma db push; npx prisma db generate' #subsequent ppush & pgen commands
+alias prism='npx prisma studio' # starts an webUI to your database
+alias dev='npm run dev' # starts a localhost server, to inspect your website
+alias pn='pnpm'

@@ -1,0 +1,74 @@
+#!/usr/bin/env zsh
+
+# Ensure we are at the root of the superproject
+dot rev-parse --show-toplevel >/dev/null 2>&1 || {
+    echo "Error: Must be run from within the superproject."
+    exit 1
+}
+
+# Iterate through all submodules
+dot submodule foreach --quiet '
+    # Check if "upstream" remote exists
+    if git remote get-url upstream >/dev/null 2>&1; then
+        echo "##################################################"
+        echo "Checking for new commits in $name from upstream..."
+        echo ""
+        echo "##################################################"
+        git fetch upstream >/dev/null 2>&1
+
+        # Determine the default branch from upstream
+        branch=$(git remote show upstream | awk "/HEAD branch/ {print \$NF}")
+        echo "Default branch name: $branch"
+
+        if [ -z "$branch" ]; then
+            echo "❌ No default branch found in upstream for $name."
+            exit 1
+        fi
+
+        # Check if the branch exists in upstream
+        if ! git rev-parse --verify upstream/$branch >/dev/null 2>&1; then
+            echo "❌ Branch upstream/$branch not found for $name."
+            exit 1
+        fi
+
+        # Compare local and upstream commits
+        local_commit=$(git rev-parse HEAD)
+        remote_commit=$(git rev-parse upstream/$branch)
+
+        if [ "$local_commit" != "$remote_commit" ]; then
+            echo "🚨 New commits available in $name from upstream:"
+            git log HEAD..upstream/$branch --oneline
+        else
+            echo "✅ $name is up to date with upstream."
+        fi
+    else
+        echo "Checking for new commits in $name from origin..."
+        git fetch origin >/dev/null 2>&1
+        
+        # Determine the default branch from origin
+        branch=$(git remote show origin | awk "/HEAD branch/ {print \$NF}")
+        
+        if [ -z "$branch" ]; then
+            echo "❌ No default branch found in origin for $name."
+            exit 1
+        fi
+
+        # Check if the branch exists in origin
+        if ! git rev-parse --verify origin/$branch >/dev/null 2>&1; then
+            echo "❌ Branch origin/$branch not found for $name."
+            exit 1
+        fi
+
+        # Compare local and origin commits
+        local_commit=$(git rev-parse HEAD)
+        remote_commit=$(git rev-parse origin/$branch)
+
+        if [ "$local_commit" != "$remote_commit" ]; then
+            echo "🚨 New commits available in $name from origin:"
+            git log HEAD..origin/$branch --oneline
+        else
+            echo "✅ $name is up to date with origin."
+        fi
+    fi
+'
+

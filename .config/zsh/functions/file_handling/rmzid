@@ -1,0 +1,18 @@
+#!/usr/bin/env zsh
+# deletes all ":Zone.Identifier"-files that come from copying files from windows to linux filesystems
+
+rmzoneid() {
+  local files
+  files=("${(@f)$(find . -type f -name "*:Zone.Identifier")}")
+
+  if (( ${#files} == 0 )); then
+    echo "No Zone.Identifier files found."
+    return 0
+  fi
+
+  print -l $files
+  echo
+  read -q "REPLY?Delete these ${#files} files? (y/N) " || return 1
+  echo
+  rm -- $files
+}

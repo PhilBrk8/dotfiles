@@ -1,0 +1,27 @@
+# Bare dotfiles repo helper.
+#
+# Goals:
+# - Provide a single entrypoint (`dot`) to manage a bare repo with $HOME as worktree.
+# - Keep it safe (never treat $HOME itself as a git dir).
+#
+# Trade-offs:
+# - This is a thin wrapper around git; use git aliases for extra shortcuts.
+
+dot() {
+    emulate -L zsh
+
+    local gitdir
+
+    # Primary location (recommended)
+    gitdir="$HOME/.files"
+
+    # Compatibility fallback (old location)
+    [[ -d "$gitdir" ]] || gitdir="$HOME/.config/.dotfiles"
+
+    if [[ ! -d "$gitdir" ]]; then
+        print -u2 "dot: bare repo not found at ~/.files or ~/.config/.dotfiles"
+        return 2
+    fi
+
+    command git --git-dir="$gitdir" --work-tree="$HOME" "$@"
+}

@@ -1,0 +1,50 @@
+#!/usr/bin/env zsh
+
+# Description: Interactively add selected audio files to an .m3u playlist using fzf
+# Usage: Called from yazi with "$@" as the selected file paths
+
+add_to_playlist_interactive() {
+  # Absolute path to your external-drive Music root
+  local music_root="/run/media/phil/T7/04_music"
+  # Directory where your .m3u playlists live
+  local pl_dir="$music_root/00_playlists"
+  # Capture all passed absolute file paths
+  local abs_paths=("$@")
+  local playlist_name
+  local playlist
+  local rel
+
+  # Ensure the playlist directory exists
+  mkdir -p "$pl_dir"
+
+  # Let user pick one playlist via fzf (displaying only filenames)
+  playlist_name=$(ls "$pl_dir"/*.m3u 2>/dev/null | sed "s|$pl_dir/||" | fzf --prompt="Playlist> ")
+  # If none selected, cancel
+  [[ -z $playlist_name ]] && {
+    echo "No playlist selected, aborting."
+    return 1
+  }
+
+  playlist="$pl_dir/$playlist_name"
+
+  # If playlist doesn't exist yet, initialize with header
+  if [[ ! -f $playlist ]]; then
+    echo "#EXTM3U" >| "$playlist"
+  fi
+
+  # Loop through each selected file
+  for f in "${abs_paths[@]}"; do
+    # Skip if not a regular file
+    [[ ! -f "$f" ]] && continue
+
+    # Compute path relative to playlist directory
+    rel=$(realpath --relative-to="${playlist:h}" "$f")
+
+    # Append if not already present
+    if ! grep -Fxq "$rel" "$playlist"; then
+      echo "$rel" >>| "$playlist"
+    fi
+  done
+
+  echo "Added ${#abs_paths[@]} file(s) to playlist: $playlist"
+}

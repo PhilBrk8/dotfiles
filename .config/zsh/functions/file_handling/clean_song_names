@@ -1,0 +1,45 @@
+#!/usr/bin/env zsh
+# Usage: ./clean_music_names.zsh [optional_artist_name]
+
+ARTIST_OVERRIDE="$1"
+
+autoload -Uz colors && colors
+echo "$fg[cyan]Starting cleanup...$reset_color"
+
+# 1. Remove NA - after playlist index if present
+prename 's/^(\d{2}\|)NA\s*-\s*/$1/' *.mp3
+
+# 2. Remove leading NA -
+prename 's/^NA\s*-\s*//' *.mp3
+
+# 3. Remove anything inside parentheses () or brackets []
+prename 's/[\(\[].*?[\)\]]//g' *.mp3
+
+# 4. Remove "official video" anywhere (case-insensitive)
+prename 's/\bofficial\s+video\b//ig' *.mp3
+
+# 5. Remove everything but the given characters here
+prename 's/[^0-9A-Za-z|\- .()]//g' *.mp3
+
+# 6. Collapse multiple spaces
+prename 's/\s{2,}/ /g' *.mp3
+
+# 7. If artist override provided
+if [[ -n "$ARTIST_OVERRIDE" ]]; then
+  # Case 1: Filenames starting with NN|
+  prename "s/^\d{2}\|\K[^-]+(?=\s*-\s*)/$ARTIST_OVERRIDE/" *.mp3
+
+  # Case 2: Filenames without index
+  prename "s/^[^-]+(?=\s*-\s*)/$ARTIST_OVERRIDE/" *.mp3
+fi
+
+# 8. Normalize dash spacing (exactly one space before and after dash)
+prename 's/\s*-\s*/ - /g' *.mp3
+
+# 9. Remove spaces before extension (.mp3)
+prename 's/\s+\.mp3$/.mp3/i' *.mp3
+
+# 10. Trim leading/trailing spaces
+prename 's/^\s+|\s+$//g' *.mp3
+
+echo "$fg[green]Cleanup complete!$reset_color"

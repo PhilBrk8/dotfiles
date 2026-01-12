@@ -1,0 +1,2 @@
+alias ventoy="sh ~/shellscripts/ventoy/Ventoy2Disk.sh { -i | -I | -u }"
+alias py='pypackage_setup_template'

@@ -1,0 +1,32 @@
+# Play audio files in current dir by type
+alias playwav='deadbeef *.wav'
+alias playogg='deadbeef *.ogg'
+alias playmp3='deadbeef *.mp3'
+
+# Play video files in current dir by type
+alias playavi='vlc *.avi'
+alias playmov='vlc *.mov'
+alias playmp4='vlc *.mp4'
+
+# yt-dlp
+alias yta-aac="yt-dlp --extract-audio --audio-format aac "
+alias yta-best="yt-dlp --extract-audio --audio-format best "
+alias yta-flac="yt-dlp --extract-audio --audio-format flac "
+alias yta-m4a="yt-dlp --extract-audio --audio-format m4a "
+alias yta-opus="yt-dlp --extract-audio --audio-format opus "
+alias yta-vorbis="yt-dlp --extract-audio --audio-format vorbis "
+alias yta-wav="yt-dlp --extract-audio --audio-format wav "
+alias ytv-best="yt-dlp -f bestvideo+bestaudio "
+alias yta-mp3="yt-dlp -f 'ba' -x --audio-format mp3 -o '%(id)s.mp3'"
+alias yt_pl="yt-dlp -o '~/Music/%(playlist_title)s/%(artist, uploader)s - %(title)s.%(ext)s'"
+alias yt_pln="yt-dlp -o '~/Music/%(playlist_title)s/%(playlist_index)02d|%(artist, uploader)s - %(title)s.%(ext)s'"
+
+alias csn="clean_song_names"
+
+# ffmpeg
+# -y overrides previous recording of ffmpeg
+alias record_mic="ffmpeg -f alsa -i hw:0,0"
+
+# add 2560x1080 resolution to available options for ultrawide monitor
+alias add-ultrawide-resolution='xrandr --newmode "2560x1080_60.00" 230.00 2560 2720 2992 3424 1080 1083 1093 1120 -hsync +vsync; xrandr --addmode HDMI-1 2560x1080_60.00; xrandr --output HDMI-1 --mode 2560x1080_60.00'
+

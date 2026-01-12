@@ -1,0 +1,90 @@
+#!/usr/bin/env zsh
+
+# Ensure we are at the root of the superproject
+dot rev-parse --show-toplevel >/dev/null 2>&1 || {
+    echo "Error: Must be run from within the superproject."
+    exit 1
+}
+
+# Iterate through all submodules
+dot submodule foreach --quiet '
+    # Check if "upstream" remote exists
+    if git remote get-url upstream >/dev/null 2>&1; then
+
+	echo "Checking for new commits in $name from upstream..."
+        git fetch upstream >/dev/null 2>&1
+
+        # Determine the default branch from upstream
+        branch=$(git remote show upstream | awk "/HEAD branch/ {print \$NF}")
+        echo "Default branch name: $branch"
+
+        # Check if the branch exists in upstream
+        if ! git rev-parse --verify upstream/$branch >/dev/null 2>&1; then
+            echo "❌ Branch upstream/$branch not found for $name."
+            exit 1
+        fi
+
+        # only prompt if upstream/$branch is NOT yet in our history
+        if git merge-base --is-ancestor upstream/$branch HEAD; then
+            echo "✅ $name already contains all commits from upstream/$branch."
+        else
+            echo "🚨 New commits available in $name from upstream:"
+            git log HEAD..upstream/$branch --oneline
+
+            # Prompt for update
+            echo "Do you want to incorporate these changes? (y/n)"
+            read -r response
+            if [[ "$response" == "y" || "$response" == "yes" ]]; then
+                echo "Merging upstream/$branch into $name..."
+                git merge upstream/$branch || {
+                    echo "Merge failed in $name. Resolve conflicts and continue."
+                    exit 1
+                }
+                echo "Pushing changes to origin in $name..."
+                git push origin HEAD || {
+                    echo "Failed to push changes to origin in $name."
+                    exit 1
+                }
+            else
+                echo "Skipping updates for $name."
+            fi
+        fi
+    else
+        echo "Checking for new commits in $name from origin..."
+        git fetch origin >/dev/null 2>&1
+
+        # Determine the default branch from origin
+        branch=$(git remote show origin | awk "/HEAD branch/ {print \$NF}")
+
+        # Check if the branch exists in origin
+        if ! git rev-parse --verify origin/$branch >/dev/null 2>&1; then
+            echo "❌ Branch origin/$branch not found for $name."
+            exit 1
+        fi
+
+        # Compare local and origin commits
+        local_commit=$(git rev-parse HEAD)
+        remote_commit=$(git rev-parse origin/$branch)
+
+        if [ "$local_commit" != "$remote_commit" ]; then
+            echo "🚨 New commits available in $name from origin:"
+            git log HEAD..origin/$branch --oneline
+
+            # Prompt for update
+            echo "Do you want to incorporate these changes? (y/n)"
+            read -r response
+            if [[ "$response" == "y" || "$response" == "yes" ]]; then
+                echo "Merging origin/$branch into $name..."
+                git merge origin/$branch || {
+                    echo "Merge failed in $name. Resolve conflicts and continue."
+                    exit 1
+                }
+            else
+                echo "Skipping updates for $name."
+            fi
+        else
+            echo "✅ $name is up to date with origin."
+        fi
+    fi
+'
+

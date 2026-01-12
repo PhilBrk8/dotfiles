@@ -1,0 +1,15 @@
+# shell editing
+alias confzsh="y ${ZDOTDIR}"
+alias confzshrc="sudo nvim ${ZDOTDIR}/.zshrc"
+alias confzshenv="sudo nvim ${ZDOTDIR}/.zshenv"
+alias srczsh="source ${ZDOTDIR}/.zshrc" #source zsh again after configuring
+alias srctmux="tmux source ~/.config/tmux/tmux.conf" #source tmux again when still within tmux
+
+# open Firefox with certain Profiles instead of only the default 
+alias ffd='firefox -P "dummy"' #set to default
+alias ffc='firefox -P "coding"'
+alias fff='firefox -P "finance"'
+
+alias cv="code /run/media/phil/T7/01__Docs/00__Lebenslauf/0_CV/CV"
+alias coverletter="code /run/media/phil/T7/01__Docs/00__Lebenslauf/0_CV/Cover_letter"
+

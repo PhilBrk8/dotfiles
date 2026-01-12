@@ -1,0 +1,9 @@
+# The KSH_AUTOLOAD option enables to load functions only on the fly when they are called
+# functionnames are the filenames in this folder and this file here is sorced into .zshrc to load the functions
+# function files should only contain function bodies
+# $fpath is a special path variable that tells zsh where the fct is.
+# in this case . refers to the relative path of this directory
+
+# autoload fct; fpath=(. $fpath)
+
+autoload extract; fpath=(. $fpath)

@@ -1,0 +1,17 @@
+#!/usr/bin/env zsh
+# removes unwanted 1's that are added to filenames by epsonscan2 software
+
+rm_1s() {
+  local target_dir=~/Documents
+  for file in "$target_dir"/*1.pdf; do
+    [[ -e "$file" ]] || continue
+    new_name="${file%1.pdf}.pdf"
+    if [[ -e "$new_name" ]]; then
+      echo "❌ Skipping: '$new_name' already exists."
+    else
+      mv "$file" "$new_name"
+      echo "✅ Renamed: '$file' -> '$new_name'"
+    fi
+  done
+}
+

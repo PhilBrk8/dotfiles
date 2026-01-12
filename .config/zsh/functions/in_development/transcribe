@@ -1,0 +1,77 @@
+#!/usr/bin/env zsh
+
+# Variables
+segments=()
+segment_count=0
+recording_pid=0
+
+# Function to start recording
+start_recording() {
+    let segment_count+=1
+    segments+=("segment_$segment_count.wav")
+    record_mic "segment_$segment_count.wav" &
+    recording_pid=$!
+    echo "Recording started (Segment $segment_count)..."
+}
+
+# Function to stop recording
+stop_recording() {
+    if [[ $recording_pid -ne 0 ]]; then
+        kill $recording_pid
+        recording_pid=0
+        echo "Recording stopped."
+    fi
+}
+
+# Function to merge segments
+merge_segments() {
+    echo "Merging segments..."
+    for seg in $segments; do
+        echo "file '$seg'" >> filelist.txt
+    done
+    ffmpeg -f concat -safe 0 -i filelist.txt -c copy output.wav
+    rm filelist.txt
+    echo "Merging completed."
+}
+
+# Function to transcribe audio
+transcribe_audio() {
+    echo "Transcribing audio..."
+    transcript=$(whisper output.wav --model tiny --language en)
+    echo $transcript | xclip -selection clipboard
+    echo "Transcription completed and copied to clipboard."
+}
+
+# Main loop
+while true; do
+    echo "Press 'r' to start/stop recording, 't' to transcribe, 'q' to quit:"
+    read choice
+
+    case $choice in
+        r|R)
+            if [[ $recording_pid -ne 0 ]]; then
+                stop_recording
+            else
+                start_recording
+            fi
+            ;;
+        t|T)
+            if [[ $recording_pid -ne 0 ]]; then
+                echo "Stop recording before transcribing."
+            else
+                merge_segments
+                transcribe_audio
+                break
+            fi
+            ;;
+        q|Q)
+            if [[ $recording_pid -ne 0 ]]; then
+                stop_recording
+            fi
+            exit 0
+            ;;
+        *)
+            echo "Invalid choice."
+            ;;
+    esac
+done

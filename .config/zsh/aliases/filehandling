@@ -1,0 +1,38 @@
+# User-mode launcher: passes all args through to yazi
+alias y='yazi_wrapper yazi "$@"'
+# Sudo launcher:
+# -E preserves HOME/XDG vars so the cwd file stays under your user runtime dir.
+# You can add more vars if needed: --preserve-env=HOME,XDG_RUNTIME_DIR,TERM,LANG
+alias sy='yazi_wrapper sudo -E yazi "$@"'
+
+# always use neovim - do not apply it to vi for emergency remote editing
+alias vim='nvim'
+
+# file manipulation
+alias mkex="chmod a+x" #make a file executable
+alias cp="xclip -sel clip" #copy the content of a file
+
+# sync files from external ssd to synology nas
+alias t7_to_nas='rsync_t7_to_synas'
+
+# Changing "ls" to "exa"
+alias ls='exa -ali --color=always --group-directories-first' # my preferred listing
+alias ld='exa -ali --color=always --group-directories-first | grep ^d"'  # all files and dirs
+alias ll='exa -l --color=always --group-directories-first'  # long format
+alias lt='exa -aT --color=always --group-directories-first' # tree listing
+alias list='exa -ali | egrep'
+
+
+# Colorize grep output (good for log files)
+alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+
+# confirm before overwriting something
+alias cp="cp -i"
+alias mv='mv -i'
+alias rm='rm -i'
+
+# renaming all files in a directory
+# s/="substitute" /g="global"
+alias rename='prename' # 's/ae/ä/g' *.png

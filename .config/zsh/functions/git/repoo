@@ -1,0 +1,18 @@
+#!/usr/bin/env zsh
+# repoo - Apply repo overlay to current directory
+# This is an autoloadable zsh function
+#
+# Place in your zsh fpath (e.g., ~/.config/zsh/functions/)
+# and add to your .zshrc: autoload -Uz repoo
+
+# If no .git directory exists in current directory, initialize git repo
+if [[ ! -d ".git" ]] && [[ ! -f ".git" ]]; then
+	echo "[repoo] No .git found in $(pwd), initializing git repository..."
+	git init || {
+		echo "[repoo] ERROR: git init failed"
+		return 1
+	}
+fi
+
+# Run the overlay apply script
+bash "$HOME/.config/.repooverlay/apply.sh"

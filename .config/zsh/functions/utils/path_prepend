@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+
+path_prepend() {
+    [[ -d "$1" ]] || return
+    case ":$PATH:" in
+    *":$1:"*) ;;
+    *) PATH="$1:$PATH" ;;
+    esac
+}

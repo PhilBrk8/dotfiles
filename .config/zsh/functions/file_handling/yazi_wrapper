@@ -1,0 +1,39 @@
+#!/usr/bin/env zsh
+
+# ---- Yazi wrapper with zoxide integration ----
+# y  = run yazi as your user
+# sy = run yazi with sudo, preserving env so --cwd-file works predictably
+#
+# Usage: yazi_wrapper <command> [args...]
+# Runs the command with --cwd-file, then cds to yazi's last dir and teaches zoxide.
+
+yazi_wrapper() {
+  emulate -L zsh                                # use clean zsh behavior in this function
+  setopt localoptions pipefail                  # safer pipelines if you add any later
+
+  local tmp rc dir
+  # Prefer XDG_RUNTIME_DIR for per-session tmp; fall back to $TMPDIR or /tmp.
+  tmp="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}/yazi-cwd-$$"
+
+  : > "$tmp" 2>/dev/null || tmp="$(mktemp -t yazi-cwd.XXXXXX)"
+  # ^ create an empty file if possible; otherwise mktemp fallback.
+
+  "$@" --cwd-file="$tmp"                        # run yazi with cwd export file
+  rc=$?                                         # capture yazi's exit code
+
+  if [[ -r "$tmp" ]]; then                      # if yazi wrote a cwd
+    dir="$(<"$tmp")"                            # read the target directory
+  fi
+  rm -f -- "$tmp"                               # cleanup temp file
+
+  # If Yazi ended in a valid, different directory: cd there and record in zoxide.
+  if [[ -n "$dir" && -d "$dir" && "$dir" != "$PWD" ]]; then
+    builtin cd -- "$dir" || return $rc          # change the shell's cwd (preserve yazi rc on failure)
+    if command -v zoxide >/dev/null 2>&1; then
+      zoxide add -- "$dir"                      # teach zoxide the visited directory
+    fi
+  fi
+
+  return $rc                                    # return yazi's exit status
+}
+

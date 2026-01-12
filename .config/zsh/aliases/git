@@ -1,0 +1,12 @@
+#Fetch latest changes from upstream
+alias gfu='dot fetch upstream'
+alias gfo='dot fetch origin'
+# Merge upstream changes into the current branch
+alias gmu='dot merge upstream/main'
+alias gmo='dot merge origin/main'
+# Push changes to your fork
+
+alias gac='git commit -am'      #automatically adds all files in dir before commit
+alias gcha='git commit --amend' #change/update current commit
+alias gloggraph='git log --graph --oneline --decorate'
+alias gwhich="git branch | grep -i" #searches branchnames

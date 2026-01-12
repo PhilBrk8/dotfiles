@@ -37,8 +37,11 @@
 
 # CLI tools
 !/.config/bat/
+!/.config/bat/**
 !/.config/btop/
+!/.config/btop/**
 !/.config/neofetch/
+!/.config/neofetch/**
 
 # git (safe subset; block credentials explicitly)
 !/.config/git/
@@ -77,6 +80,8 @@
 # python
 !/.config/uv/
 !/.config/ruff/
+!/.config/uv/**
+!/.config/ruff/**
 
 # Never track nested git metadata anywhere we allowlist
 **/.git/

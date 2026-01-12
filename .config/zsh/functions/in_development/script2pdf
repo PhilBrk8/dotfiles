@@ -1,0 +1,17 @@
+#!/usr/bin/env zsh
+
+if [ -z "$1" ]; then
+    echo "No file name provided."
+    return 1
+fi
+
+if [ ! -f "$1" ]; then
+    echo "File '$1' does not exist."
+    return 1
+fi
+
+local base_name=$(basename "$1" | cut -d. -f1)
+local pdf_name="${base_name}.pdf"
+
+enscript -B -p - "$1" | ps2pdf - "$pdf_name"
+echo "Converted '$1' to '$pdf_name'"
