@@ -1,0 +1,3 @@
+theme = catppuccin-mocha
+confirm-close-surface = false
+keybind = shift+enter=text:\x1b\r
