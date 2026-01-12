@@ -35,6 +35,11 @@
 # -------------------------------------------------------------------
 !/.config/
 
+# CLI tools
+!/.config/bat/
+!/.config/btop/
+!/.config/neofetch/
+
 # git (safe subset; block credentials explicitly)
 !/.config/git/
 !/.config/git/**
@@ -44,9 +49,10 @@
 !/.config/systemd/
 !/.config/systemd/user/**
 
-# ghostty
+# terminal and file manager
 !/.config/ghostty/
 !/.config/ghostty/**
+!/.config/yazi/
 
 # neovim: allow config, but do NOT track embedded git metadata if present
 !/.config/nvim/
@@ -68,16 +74,28 @@
 !/.config/zsh/functions/**
 !/.config/zsh/plugins/*.zsh
 
+# python
+!/.config/uv/
+!/.config/ruff/
+
+# Never track nested git metadata anywhere we allowlist
+**/.git/
+**/.git/**
+
 # zsh: re-ignore known heavy/private areas
 /.config/zsh/docs/**
 /.config/zsh/plugins/autosuggestions/**
 /.config/zsh/plugins/zsh-syntax-highlighting/**
 /.config/zsh/powerlevel10k/**
 /.config/zsh/.claude/**
-
-# Never track nested git metadata anywhere we allowlist
-**/.git/
-**/.git/**
+# aliases
+/.config/zsh/aliases/network_admin
+/.config/zsh/aliases/ssh
+/.config/zsh/aliases/external_filesystems
+# functions
+/.config/zsh/functions/sys_admin/**
+/.config/zsh/functions/file_handling/rsync_t7_to_synas
+/config/zsh/functions/in_development/**
 
 # -------------------------------------------------------------------
 # 3) Allowlist: curated ~/.local/share (PUBLIC)
