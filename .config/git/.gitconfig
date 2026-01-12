@@ -1,0 +1,31 @@
+[user]
+	name = Phil Brk8
+	email = philbrk8@gmail.com
+[init]
+	defaultBranch = main
+[url "git@github.com:"]
+	insteadOf = https://github.com/
+[url "git@gitlab.com:"]
+	insteadOf = https://gitlab.com/
+[alias]
+	a = add
+	aa = add --all
+	ap = add -p
+	au = add -u
+	c = commit
+	cm = commit -m
+	ca = commit -am
+	amend = commit --amend
+	sw = switch
+	br = branch
+	brv = branch -vv
+	brD = branch -D
+	co = checkout
+	cob = checkout -b
+	rv = revert
+	s = status --short
+	lg = log --graph --oneline --decorate
+	tag = tag
+	newtag = tag -a
+# [commit]
+# 	template = /home/phil/.config/git/commit_template.txt

@@ -1,0 +1,6 @@
+# <type>(<scope>): <subject>
+
+# Context: why was this change needed?
+# Behavior change: what does it do now?
+#
+# Refs: KEY-XXX

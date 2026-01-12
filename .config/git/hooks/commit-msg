@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+MSG_FILE="${1:?commit-msg hook requires path to commit message file}"
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+
+# Prefer repo-local config; fall back to global config shipped with repooverylay.
+if [[ -f "$REPO_ROOT/commitlint.config.js" ]]; then
+  CFG="$REPO_ROOT/commitlint.config.js"
+else
+  CFG=""
+fi
+
+run_commitlint() {
+  if [[ -n "$CFG" ]]; then
+    "$@" --config "$CFG" --edit "$MSG_FILE"
+  else
+    "$@" --edit "$MSG_FILE"
+  fi
+}
+
+# 1) Prefer repo-local commitlint (installed via bun in $REPO_ROOT)
+LOCAL_COMMITLINT="$REPO_ROOT/node_modules/.bin/commitlint"
+if [[ -x "$LOCAL_COMMITLINT" ]]; then
+  run_commitlint "$LOCAL_COMMITLINT"
+  exit 0
+fi
+
+# 2) Fall back to a global 'commitlint' binary if present (e.g. global install)
+if command -v commitlint >/dev/null 2>&1; then
+  run_commitlint commitlint
+  exit 0
+fi
+
+# 3) Fall back to bunx for CLI execution (only safe without a config that requires extends)
+if command -v bun >/dev/null 2>&1; then
+  if [[ -n "$CFG" ]]; then
+    echo "ERROR: commitlint dependencies are missing in $REPO_ROOT."
+    echo "Run:"
+    echo "  cd \"$REPO_ROOT\" && bun install"
+    exit 1
+  fi
+
+  run_commitlint bunx --yes @commitlint/cli@latest
+  exit 0
+fi
+
+echo "ERROR: commitlint hook could not run."
+echo "Install bun + dependencies in the repo root:"
+echo "  cd \"$REPO_ROOT\" && bun install"
+exit 1
