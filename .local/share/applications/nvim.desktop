@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=Neovim (Ghostty)
+Comment=Edit files in Neovim inside Ghostty
+# One of these Exec forms will work depending on your Ghostty version.
+# Try them in order; keep the one that launches NVIM correctly and remove the others.
+#Exec=ghostty --command nvim %F
+Exec=ghostty -e nvim %F
+Terminal=false
+Type=Application
+Icon=utilities-terminal
+Categories=Utility;TextEditor;Development;
+MimeType=text/plain;text/markdown;application/x-shellscript;text/x-shellscript;application/json;text/x-toml;text/x-yaml;text/x-dockerfile;text/x-ini;application/x-yaml;
+
