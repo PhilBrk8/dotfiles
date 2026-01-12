@@ -1,0 +1,18 @@
+[submodule ".config/kinesis/Adv360pro/Adv360-Pro-ZMK"]
+	path = .config/kinesis/Adv360pro/Adv360-Pro-ZMK
+	url = git@gitlab.com:d.licious/d.files/Adv360-Pro-ZMK.git
+[submodule ".config/nvim"]
+	path = .config/nvim
+	url = git@gitlab.com:d.licious/d.files/kickstart.nvim.git
+[submodule ".config/zsh/plugins/autosuggestions"]
+	path = .config/zsh/plugins/autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions.git
+[submodule ".config/zsh/powerlevel10k"]
+	path = .config/zsh/powerlevel10k
+	url = https://github.com/romkatv/powerlevel10k.git
+[submodule ".config/tmux"]
+	path = .config/tmux
+	url = git@gitlab.com:d.licious/d.files/tmux.git
+[submodule ".config/zsh/plugins/zsh-syntax-highlighting"]
+	path = .config/zsh/plugins/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting.git

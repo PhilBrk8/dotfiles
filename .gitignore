@@ -1,0 +1,96 @@
+############################
+# Dotfiles repo hardening  #
+############################
+# PUBLIC baseline: deny-all, allowlist only what you explicitly track.
+# This keeps `dot status` quiet even if you create new folders/files in $HOME.
+
+# -------------------------------------------------------------------
+# 0) Deny all by default
+# -------------------------------------------------------------------
+*
+
+# Keep this file tracked so you can adjust the allowlist
+!/.gitignore
+
+# -------------------------------------------------------------------
+# 1) Allowlist: small set of top-level dotfiles
+# -------------------------------------------------------------------
+!/.profile
+!/.gitconfig
+!/.gitmessage
+!/.gitmodules
+!/README.md
+!/git
+# for ensuring commit quality with a linter
+!/.pre-commit-config.yaml
+!/.githooks/
+!/.githooks/**
+!/.secrets-baseline
+!/commitlint.config.cjs
+!/bun.lockb
+!/package.json
+
+# -------------------------------------------------------------------
+# 2) Allowlist: curated ~/.config (PUBLIC)
+# -------------------------------------------------------------------
+!/.config/
+
+# git (safe subset; block credentials explicitly)
+!/.config/git/
+!/.config/git/**
+/.config/git/credentials
+
+# systemd user units
+!/.config/systemd/
+!/.config/systemd/user/**
+
+# ghostty
+!/.config/ghostty/
+!/.config/ghostty/**
+
+# neovim: allow config, but do NOT track embedded git metadata if present
+!/.config/nvim/
+!/.config/nvim/**
+/.config/nvim/.git/
+/.config/nvim/**/.git/**
+
+# tmux: only track your config file (avoid vendor/plugin checkout noise)
+!/.config/tmux/
+!/.config/tmux/tmux.conf
+
+# zsh: track your own config, avoid large vendored plugin repos and private files
+!/.config/zsh/
+!/.config/zsh/README.md
+!/.config/zsh/options
+!/.config/zsh/.p10k.zsh
+!/.config/zsh/lib/**
+!/.config/zsh/aliases/**
+!/.config/zsh/functions/**
+!/.config/zsh/plugins/*.zsh
+
+# zsh: re-ignore known heavy/private areas
+/.config/zsh/docs/**
+/.config/zsh/plugins/autosuggestions/**
+/.config/zsh/plugins/zsh-syntax-highlighting/**
+/.config/zsh/powerlevel10k/**
+/.config/zsh/.claude/**
+
+# Never track nested git metadata anywhere we allowlist
+**/.git/
+**/.git/**
+
+# -------------------------------------------------------------------
+# 3) Allowlist: curated ~/.local/share (PUBLIC)
+# -------------------------------------------------------------------
+!/.local/
+!/.local/share/
+!/.local/share/applications/
+
+# Default: ignore everything in applications, then allow specific curated files
+/.local/share/applications/*
+!/.local/share/applications/mimeapps.list
+!/.local/share/applications/nvim.desktop
+!/.local/share/applications/dev.zed.Zed.desktop
+
+# Defensive: always ignore generated caches/noise
+/.local/share/applications/mimeinfo.cache
